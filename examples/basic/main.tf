@@ -26,9 +26,9 @@ module "recoveryservicesvault" {
   immutability                     = "Unlocked"
   cmk_identity_id                  = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-keyvault-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/00000000-0000-0000-0000-000000000000"
 
-  cmk_key_vault_key = {
-    id          = "https://example-keyvault.vault.azure.net/keys/example-key"
-    resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-keyvault-rg/providers/Microsoft.KeyVault/vaults/example-keyvault/keys/example-key"
+  cmk_key = {
+    versionless_id          = "https://example-keyvault.vault.azure.net/keys/example-key"
+    resource_versionless_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-keyvault-rg/providers/Microsoft.KeyVault/vaults/example-keyvault/keys/example-key"
   }
 
   vm_backup_policy = {

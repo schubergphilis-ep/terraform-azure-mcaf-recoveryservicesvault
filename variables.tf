@@ -50,13 +50,13 @@ variable "cmk_identity_id" {
   default     = null
 }
 
-variable "cmk_key_vault_key" {
-  description = "The Key Vault key IDs for CMK encryption."
+variable "cmk_key" {
   type = object({
-    id          = string
-    resource_id = string
+    resource_versionless_id = string
+    versionless_id          = string
   })
-  default = null
+  default     = null
+  description = "Customer Managed Key to use for this Recovery Services Vault. When `system_assigned_identity_enabled` is true, the vault's identity is granted 'Key Vault Crypto Service Encryption User' on this specific key (least privilege). Leave null to not attach a CMK."
 }
 
 variable "user_assigned_identities" {

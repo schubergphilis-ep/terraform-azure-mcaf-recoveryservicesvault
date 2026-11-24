@@ -20,13 +20,13 @@ resource "azurerm_recovery_services_vault" "this" {
   }
 
   dynamic "encryption" {
-    for_each = var.cmk_key_vault_key != null ? ["this"] : []
+    for_each = var.cmk_key != null ? ["this"] : []
 
     content {
       infrastructure_encryption_enabled = true
       user_assigned_identity_id         = var.system_assigned_identity_enabled == false ? var.cmk_identity_id : null
       use_system_assigned_identity      = var.system_assigned_identity_enabled
-      key_id                            = var.cmk_key_vault_key.id
+      key_id                            = var.cmk_key.versionless_id
     }
   }
 
@@ -41,8 +41,8 @@ resource "azurerm_recovery_services_vault" "this" {
 }
 
 resource "azurerm_role_assignment" "this" {
-  count                = (var.system_assigned_identity_enabled == true && var.cmk_key_vault_key != null) ? 1 : 0
+  count                = (var.system_assigned_identity_enabled == true && var.cmk_key != null) ? 1 : 0
   principal_id         = azurerm_recovery_services_vault.this.identity[0].principal_id
-  scope                = var.cmk_key_vault_key.resource_id
+  scope                = var.cmk_key.resource_versionless_id
   role_definition_name = "Key Vault Crypto Service Encryption User"
 }
