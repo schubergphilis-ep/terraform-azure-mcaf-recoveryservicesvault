@@ -6,7 +6,6 @@ resource "azurerm_recovery_services_vault" "this" {
   storage_mode_type             = var.storage_mode_type
   cross_region_restore_enabled  = var.cross_region_restore_enabled
   location                      = var.location
-  soft_delete_enabled           = var.soft_delete_enabled
   immutability                  = var.immutability
   tags = merge(
     try(var.tags),
@@ -21,13 +20,13 @@ resource "azurerm_recovery_services_vault" "this" {
   }
 
   dynamic "encryption" {
-    for_each = var.cmk_key_vault_key_id != null ? ["this"] : []
+    for_each = var.cmk_key != null ? ["this"] : []
 
     content {
       infrastructure_encryption_enabled = true
       user_assigned_identity_id         = var.system_assigned_identity_enabled == false ? var.cmk_identity_id : null
       use_system_assigned_identity      = var.system_assigned_identity_enabled
-      key_id                            = var.cmk_key_vault_key_id
+      key_id                            = var.cmk_key.versionless_id
     }
   }
 
@@ -42,8 +41,8 @@ resource "azurerm_recovery_services_vault" "this" {
 }
 
 resource "azurerm_role_assignment" "this" {
-  count                = (var.system_assigned_identity_enabled == true && var.cmk_key_vault_key_id != null) ? 1 : 0
+  count                = (var.system_assigned_identity_enabled == true && var.cmk_key != null) ? 1 : 0
   principal_id         = azurerm_recovery_services_vault.this.identity[0].principal_id
-  scope                = var.cmk_key_vault_key_id
+  scope                = var.cmk_key.resource_versionless_id
   role_definition_name = "Key Vault Crypto Service Encryption User"
 }

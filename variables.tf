@@ -20,12 +20,6 @@ variable "sku" {
   default     = "Standard"
 }
 
-variable "soft_delete_enabled" {
-  description = "Enable or disable soft delete for the vault, defaults to true"
-  type        = bool
-  default     = true
-}
-
 variable "immutability" {
   description = "Enable or disable immutability for backups in the vault."
   type        = string
@@ -56,10 +50,13 @@ variable "cmk_identity_id" {
   default     = null
 }
 
-variable "cmk_key_vault_key_id" {
-  description = "The Key Vault key ID for CMK encryption."
-  type        = string
+variable "cmk_key" {
+  type = object({
+    resource_versionless_id = string
+    versionless_id          = string
+  })
   default     = null
+  description = "Customer Managed Key to use for this Recovery Services Vault. When `system_assigned_identity_enabled` is true, the vault's identity is granted 'Key Vault Crypto Service Encryption User' on this specific key (least privilege). Leave null to not attach a CMK."
 }
 
 variable "user_assigned_identities" {
@@ -230,7 +227,7 @@ variable "file_share_backup_policy" {
     A map objects for backup and retation options.
 
     - `name` - (Optional) The name of the private endpoint. One will be generated if not set.
-    - `role_assignments` - (Optional) A map of role assignments to create on the 
+    - `role_assignments` - (Optional) A map of role assignments to create on the
 
     - `backup` - (required) backup options.
         - `frequency` - (Required) Sets the backup frequency. Possible values are hourly, Daily and Weekly.
@@ -239,7 +236,7 @@ variable "file_share_backup_policy" {
         - `hour_duration` -  (Optional) Duration of the backup window in hours. Possible values are between 4 and 24 This is used when frequency is hourly. 12
         - `weekdays` -  (Optional) The days of the week to perform backups on. Must be one of Sunday, Monday, Tuesday, Wednesday, Thursday, Friday or Saturday. This is used when frequency is Weekly. ["Tuesday", "Saturday"]
     - `retention_daily` - (Optional)
-      - `count` - 
+      - `count` -
     - `retantion_weekly` -
       - `count` -
       - `weekdays` -

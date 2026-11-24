@@ -4,9 +4,13 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 4"
+      version = ">= 5"
     }
   }
+}
+
+provider "azurerm" {
+  features {}
 }
 
 module "recoveryservicesvault" {
@@ -18,12 +22,14 @@ module "recoveryservicesvault" {
   sku                              = "Standard"
   storage_mode_type                = "GeoRedundant"
   cross_region_restore_enabled     = true
-  soft_delete_enabled              = true
   system_assigned_identity_enabled = true
   immutability                     = "Unlocked"
-  cmk_key_vault_key_id             = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-keyvault-rg/providers/Microsoft.KeyVault/vaults/example-keyvault/keys/example-key"
-  cmk_identity_id                  = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-keyvault-rg/providers/Microsoft.KeyVault/vaults/example-keyvault"
+  cmk_identity_id                  = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-keyvault-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/00000000-0000-0000-0000-000000000000"
 
+  cmk_key = {
+    versionless_id          = "https://example-keyvault.vault.azure.net/keys/example-key"
+    resource_versionless_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-keyvault-rg/providers/Microsoft.KeyVault/vaults/example-keyvault/keys/example-key"
+  }
 
   vm_backup_policy = {
     example_policy = {
