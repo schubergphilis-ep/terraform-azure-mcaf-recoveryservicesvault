@@ -67,7 +67,7 @@ and asks for the **versionless** form of each, so you choose explicitly not to p
 | `resource_versionless_id` | The versionless Azure resource ID of the key. The vault's identity is granted the role on exactly this key. |
 
 These are the `versionless_id` and `resource_versionless_id` attributes of both the
-`azurerm_key_vault_key` resource and data source, so you can pass either in directly.
+`azurerm_key_vault_key` resource and data source, so you can pass either in as a whole.
 
 `cmk_key` is optional as a whole: leave it unset (`null`) and the vault uses no customer-managed
 key. If you set it, both attributes are required, also when
@@ -93,6 +93,14 @@ grep -rn 'cmk_key_vault_key_id' .
    cmk_key_vault_key_id = azurerm_key_vault_key.this.id
 
    # v1.0.0
+   cmk_key = azurerm_key_vault_key.this
+   ```
+
+   Terraform ignores the attributes of the key that `cmk_key` doesn't declare, so you can pass
+   the whole resource (or `data.azurerm_key_vault_key.this`). Setting the two attributes
+   explicitly works the same:
+
+   ```hcl
    cmk_key = {
      versionless_id          = azurerm_key_vault_key.this.versionless_id
      resource_versionless_id = azurerm_key_vault_key.this.resource_versionless_id
