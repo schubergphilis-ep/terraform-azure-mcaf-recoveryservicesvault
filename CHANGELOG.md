@@ -23,4 +23,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * enhancement: Refactored and added VM and File Share policies ([#1](https://github.com/schubergphilis/terraform-azure-mcaf-recoveryservicesvault/pull/1)) ([981fb3a](https://github.com/schubergphilis-ep/terraform-azure-mcaf-recoveryservicesvault/commit/981fb3ad0c5bed38021b830726c69e94e6638900))
 
 ## 0.1.0 (2025-01-24)
-
